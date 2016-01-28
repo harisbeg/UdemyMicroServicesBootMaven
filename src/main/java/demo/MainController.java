@@ -5,29 +5,24 @@ import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import demo.dao.TeamDao;
 import demo.domain.Player;
 import demo.domain.Team;
 
 @RestController
 public class MainController {
 	
-	private Team team;
+	@Autowired TeamDao teamDao;
 	
-	@PostConstruct
-	public void init() {
-		Set<Player> players = new HashSet<>();
-		players.add(new Player("Charlie Brown", "pitcher"));
-		players.add(new Player("Snoopy", "shortstop"));
-		
-		team = new Team("California", "Peanuts", players);
-	}
 	
-	@RequestMapping("/hi")
-	public Team hiThere() {
-		return team;
+	@RequestMapping("/teams/{name}")
+	public Team hiThere(@PathVariable String name) {
+		return teamDao.findByName(name);
 	}
 
 }
